@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: kubeops-api
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/PragatiAN1109/kubeOps.git
+    targetRevision: main
+    path: k8s/gitops
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  # syncPolicy:
+  #   syncOptions:
+  #     - CreateNamespace=false
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
