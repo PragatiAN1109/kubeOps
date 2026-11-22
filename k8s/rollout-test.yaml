@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeops-rollout-test
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: kubeops-rollout-test
+  template:
+    metadata:
+      labels:
+        app: kubeops-rollout-test
+    spec:
+      containers:
+        - name: rollout-container
+          # image: busybox:1.36
+          # image: busybox:v999999-nonexistent
+          image: busybox:1.36
+          command: ["/bin/sh", "-c"]
+          args:
+            - "mkdir -p /www && echo 'Version 1 - Healthy' > /www/index.html && httpd -f -p 8080 -h /www"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 5

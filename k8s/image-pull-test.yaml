@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubeops-image-test
+  labels:
+    app: kubeops-image-test
+spec:
+  containers:
+    - name: image-test-container
+      # image: busybox:v999999-nonexistent
+      image: busybox:1.36
+      imagePullPolicy: Always
+      command: ["sleep", "3600"]
+  restartPolicy: Always
