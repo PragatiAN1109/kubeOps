@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: kubeops-api
-          image: kubeops-api:v1.0.0
+          image: kubeops-api:v1.1.0-secure
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -42,3 +42,19 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+          
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+
