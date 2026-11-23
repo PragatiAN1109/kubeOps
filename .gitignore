@@ -1,0 +1,5 @@
+# Generated security scan reports
+security/reports/
+
+# Temporary Dockerfile backup
+Dockerfile.original
