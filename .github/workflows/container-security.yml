@@ -1,0 +1,37 @@
+
+name: Container Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trivy-scan:
+    name: Build and scan Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build hardened Docker image
+        run: |
+          docker build \
+            -t kubeops-api:security-scan \
+            .
+
+      - name: Scan HIGH and CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: kubeops-api:security-scan
+          format: table
+          severity: HIGH,CRITICAL
+          vuln-type: os,library
+          ignore-unfixed: true
+          exit-code: '1'
